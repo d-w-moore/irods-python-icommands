@@ -1,20 +1,25 @@
 #!/usr/bin/env python
 import json
 import os
+import sys
 from os.path import expanduser,exists
+from getopt import getopt
 
-try: raw_input
-except NameError: raw_input = input
+opt,arg = getopt(sys.argv[1:],'h:p:u:z:')
+optD = dict(opt)
 
 home_env_path = expanduser('~/.irods')
 
 if not exists(home_env_path):
     os.makedirs(home_env_path)
 
-host = raw_input('irods server host -> ')
-port = raw_input('irods server port -> ')
-user = raw_input('irods user -> ')
-zone = raw_input('irods zone -> ')
+try: raw_input
+except NameError: raw_input = input
+
+host = optD.get('-h') or raw_input('irods server host -> ')
+port = optD.get('-p') or raw_input('irods server port -> ')
+user = optD.get('-u') or raw_input('irods user -> ')
+zone = optD.get('-z') or raw_input('irods zone -> ')
 
 json.dump( {
              "irods_host": host,
