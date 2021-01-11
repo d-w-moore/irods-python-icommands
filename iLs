@@ -2,21 +2,34 @@
 
 from __future__ import print_function
 from irods.session import iRODSSession
+from irods.exception import CollectionDoesNotExist
 from os.path import expanduser
 import sys 
 
 from getopt import getopt
-opt,arg=getopt(sys.argv[1:],'r')
+opt,arg=getopt(sys.argv[1:],'rS')
 optD = dict(opt)
 
-with iRODSSession(
-     irods_env_file=expanduser('~/.irods/irods_environment.json')) as s:
-  if not arg: arg=['/{0.zone}/home/{0.username}'.format(s)]
-  collection = s.collections.get(arg[0])
-  if '-r' not in optD:
-    print('C',collection.path)
-  else:
-    for this,subcols,dataobjs in collection.walk():
-      print('C',this.path)  
-      for d in dataobjs:
-        print('D',d.path)
+def annotation(typecode):
+    return '' if '-S' in optD else (typecode + '\t')
+
+def print_item(typecode, path):
+    print(annotation(typecode) + path)
+  
+with iRODSSession (irods_env_file=expanduser('~/.irods/irods_environment.json')) as s:
+    if not arg:
+        arg=['/{0.zone}/home/{0.username}'.format(s)]
+    tc = 'C'
+    try:
+        obj = s.collections.get(arg[0])
+    except CollectionDoesNotExist:
+        obj = s.data_objects.get(arg[0])
+        tc = 'D'
+
+    if '-r' not in optD or tc != 'C':
+	print_item(tc,obj.path)
+    else:
+	for this,subcols,dataobjs in obj.walk():
+	    print_item('C',this.path)  
+	    for d in dataobjs:
+		print_item('D',d.path)
