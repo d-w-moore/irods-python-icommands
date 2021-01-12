@@ -27,9 +27,9 @@ with iRODSSession (irods_env_file=expanduser('~/.irods/irods_environment.json'))
         tc = 'D'
 
     if '-r' not in optD or tc != 'C':
-	print_item(tc,obj.path)
+        print_item(tc,obj.path)
     else:
-	for this,subcols,dataobjs in obj.walk():
-	    print_item('C',this.path)  
-	    for d in dataobjs:
-		print_item('D',d.path)
+        for this,subcols,dataobjs in obj.walk():
+            print_item('C',this.path)  
+            for d in dataobjs:
+                print_item('D',d.path)
