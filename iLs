@@ -4,7 +4,7 @@ from __future__ import print_function
 from irods.session import iRODSSession
 from irods.exception import CollectionDoesNotExist
 from os.path import expanduser
-import sys 
+import sys
 
 from getopt import getopt
 opt,arg=getopt(sys.argv[1:],'rS')
@@ -15,10 +15,12 @@ def annotation(typecode):
 
 def print_item(typecode, path):
     print(annotation(typecode) + path)
-  
+
 with iRODSSession (irods_env_file=expanduser('~/.irods/irods_environment.json')) as s:
+
     if not arg:
         arg=['/{0.zone}/home/{0.username}'.format(s)]
+
     tc = 'C'
     try:
         obj = s.collections.get(arg[0])
@@ -26,10 +28,19 @@ with iRODSSession (irods_env_file=expanduser('~/.irods/irods_environment.json'))
         obj = s.data_objects.get(arg[0])
         tc = 'D'
 
-    if '-r' not in optD or tc != 'C':
+    if tc == 'D':
         print_item(tc,obj.path)
     else:
-        for this,subcols,dataobjs in obj.walk():
-            print_item('C',this.path)  
-            for d in dataobjs:
-                print_item('D',d.path)
+        if '-r' in optD:
+            # -- walk the subtree
+            for this,subcols,dataobjs in obj.walk():
+                print_item('C',this.path)
+                for d in dataobjs:
+                    print_item('D',d.path)
+        else:
+            # -- display only one object, and immediate children
+                print_item('C',obj.path)
+                for d in obj.data_objects:
+                    print_item('D',d.path)
+                for c in obj.subcollections:
+                    print_item('C',c.path)
