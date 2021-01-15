@@ -25,7 +25,7 @@ def _partition_json_keys(dct):
                                 else ( s[:-len(sub)] if s.endswith(sub) else s)
     argkeys = set(k for k in dct if _env_init_keys_regex.match(k))
     remkeys = set(dct.keys()) - argkeys
-    return { remove(remove(k,"irods_"),"_name",end=1):v for k,v in dct.items() if k in argkeys }, \
+    return { remove(remove(k,"irods_"),"_name",sfx=1):v for k,v in dct.items() if k in argkeys }, \
            { k:v for k,v in dct.items() if k not in argkeys }
 
 def _make_session(*x,**kw):
