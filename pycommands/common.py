@@ -53,7 +53,7 @@ def irods_session_from_args(*x,**kw):
     init, non_init = _partition_json_keys(file_config)
     kw.update(init)
     ses = _make_session(*x,**kw)
-    # TODO - process any non-init keys?
+    # TODO ? process any non-init keys?
     return ses
 
 def irods_session_from_env_file(*x,**kw):
