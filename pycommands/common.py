@@ -1,11 +1,21 @@
+from __future__ import print_function
 from irods.session import iRODSSession
 
 import atexit
+import sys
 import re
 import json
 import io
 import os
 import ssl
+import six
+
+DEFAULT_DIE_STATUS = 127
+
+def die(msg, status_code = None):
+    print( msg, file = sys.stderr )
+    exit( status_code if isinstance(status_code,six.integer_types)
+          else DEFAULT_DIE_STATUS )
 
 _env_init_keys_regex = re.compile('irods_(host|port|(zone|user)_name)$')
 
