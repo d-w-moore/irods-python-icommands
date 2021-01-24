@@ -11,13 +11,13 @@ type of interface.
 
 ## Motivation:
 
-The aim is eventually that these commands could be an decent surrogate for the icommands on platforms
-where their installation is undesirable (such as under HPC requirements) or impossible (eg., on Windows).
+The aim is eventually that these commands could serve as a substitute for the icommands on platforms
+where their installation is infeasible (such as on Windows).
 
 ## Initializing the client environment:
 
-Currently, as a stand-in for **iinit** , the following two commands can be used  together to achieve 
-the creation of the environment file and native authentication file in ~/.irodsA :
+The following two commands can be used together to achieve what is normally done with **iinit** ,
+ie. the creation of an environment file and a native authentication under the ~/.irods directory:
 
    * `iHostinit.py`
    * `iPwinit.py`
@@ -47,8 +47,8 @@ and appear to work fine.
    * Then download these commands to the host, and access iRODS via the Python client commands.
      ```
      $ git clone https://github.com/d-w-moore/irods-python-icommands
-     $ cd irods-python-icommands ; PATH="$(pwd):$PATH"
-     $ ./iHostinit -h "$(hostname)" -z tempZone -u rods -p 1247 
+     $ cd irods-python-icommands
+     $ ./iHostinit.py -h "$(hostname)" -z tempZone -u rods -p 1247 
      $ ./iPwinit.py
      irods password -> #### (silent entry)
      $ ./iLs.py
